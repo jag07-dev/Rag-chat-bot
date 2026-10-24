@@ -1,5 +1,7 @@
 <<<<<<< HEAD
 # RAG Document Chatbot
+**GitHub Link:** https://github.com/jag07-dev/Rag-chat-bot.git
+**Live demo:** https://pdf-ragchat-bot.streamlit.app/
 
 A beginner-friendly **Retrieval-Augmented Generation (RAG)** application built with Python.
 
