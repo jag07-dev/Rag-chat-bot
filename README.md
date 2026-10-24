@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # RAG Document Chatbot
 
 A beginner-friendly **Retrieval-Augmented Generation (RAG)** application built with Python.
@@ -262,3 +263,4 @@ Learn. Build. Grow.
 ## License
 
 This project is intended for learning and demonstration purposes.
+=======
