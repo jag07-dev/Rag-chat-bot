@@ -1,3 +1,4 @@
+import io
 import os
 
 import streamlit as st
@@ -18,7 +19,7 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_MODEL = os.getenv(
     "GROQ_MODEL",
-    "llama-3.3-70b-versatile"
+    "openai/gpt-oss-120b"
 )
 
 if not GROQ_API_KEY:
@@ -46,46 +47,27 @@ def load_embedding_model():
 
 embedding_model = load_embedding_model()
 
-def extract_text_from_pdf(pdf_file):
-    pdf_reader = PdfReader(pdf_file)
-    extracted_pages = []
+def extract_pages_from_pdf(pdf_file):
+    reader = PdfReader(pdf_file)
+    return [
+        (number, page.extract_text() or "")
+        for number, page in enumerate(reader.pages, start=1)
+    ]
 
-    for page in pdf_reader.pages:
-        page_text = page.extract_text()
+def split_pages_into_chunks(pages, chunk_size=180, chunk_overlap=40):
+    words = []
+    for page_number, text in pages:
+        words.extend((word, page_number) for word in text.split())
 
-        if page_text:
-            extracted_pages.append(page_text)
-
-    document_text = "\n".join(extracted_pages)
-
-    return document_text, len(pdf_reader.pages)
-
-def split_text_into_chunks(
-    text,
-    chunk_size=180,
-    chunk_overlap=40
-):
-    words = text.split()
     chunks = []
-
-    step_size = chunk_size - chunk_overlap
-
-    for start_index in range(
-        0,
-        len(words),
-        step_size
-    ):
-        end_index = start_index + chunk_size
-
-        chunk_words = words[
-            start_index:end_index
-        ]
-
-        chunk_text = " ".join(chunk_words)
-
-        if chunk_text.strip():
-            chunks.append(chunk_text)
-
+    step = chunk_size - chunk_overlap
+    for start in range(0, len(words), step):
+        piece = words[start:start + chunk_size]
+        if piece:
+            chunks.append({
+                "text": " ".join(word for word, _ in piece),
+                "pages": sorted({page for _, page in piece}),
+            })
     return chunks
 
 def create_chunk_embeddings(
@@ -112,6 +94,17 @@ def create_faiss_index(embeddings):
     )
 
     return index
+
+@st.cache_resource(show_spinner="Creating document embeddings...")
+def build_document_index(file_bytes, file_name):
+    pages = extract_pages_from_pdf(io.BytesIO(file_bytes))
+    chunks = split_pages_into_chunks(pages)
+    if not chunks:
+        return None, None
+    embeddings = create_chunk_embeddings(
+        [chunk["text"] for chunk in chunks], embedding_model
+    )
+    return create_faiss_index(embeddings), chunks
 
 def retrieve_relevant_chunks(
     question,
@@ -154,7 +147,7 @@ def generate_answer(
     model_name
 ):
     context = "\n\n".join(
-        relevant_chunks
+        chunk["text"] for chunk in relevant_chunks
     )
 
     system_prompt = """
@@ -165,6 +158,10 @@ provided from the uploaded document.
 
 If the answer is not available in the context, say:
 "I could not find that information in the document."
+
+If the document mentions the topic but does not give
+the exact detail asked for, say what the document does
+state instead of refusing.
 
 Do not use outside knowledge.
 Keep the answer clear and concise.
@@ -195,10 +192,7 @@ Question:
         temperature=0
     )
 
-    answer = (
-        response.choices[0]
-        .message.content
-    )
+    answer = response.choices[0].message.content
 
     return answer
 
@@ -215,101 +209,70 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is not None:
-    if (
-        st.session_state.uploaded_file_name
-        != uploaded_file.name
-    ):
+    if st.session_state.uploaded_file_name != uploaded_file.name:
         st.session_state.messages = []
+        st.session_state.uploaded_file_name = uploaded_file.name
 
-        st.session_state.uploaded_file_name = (
-            uploaded_file.name
-        )
-    st.success(
-        f"Uploaded successfully: {uploaded_file.name}"
+    st.success(f"Uploaded successfully: {uploaded_file.name}")
+
+    faiss_index, document_chunks = build_document_index(
+        uploaded_file.getvalue(), uploaded_file.name
     )
 
-    document_text, page_count = (
-            extract_text_from_pdf(uploaded_file)
-        )
-
-    if not document_text.strip():
+    if faiss_index is None:
         st.error(
             "No readable text was found in this PDF. "
             "It may be scanned or image-based."
         )
         st.stop()
 
-    #word_count = len(document_text.split())
-
-    document_chunks = split_text_into_chunks(document_text)
-
-    #chunk_count = len(document_chunks)
-
-    with st.spinner(
-    "Creating document embeddings..."
-    ):
-        chunk_embeddings = (
-            create_chunk_embeddings(
-                document_chunks,
-                embedding_model
-            )
-        )
-
-    faiss_index = create_faiss_index(
-    chunk_embeddings
-    )
-
     for message in st.session_state.messages:
-        with st.chat_message(
-            message["role"]
-        ):
-            st.markdown(
-                message["content"]
-            )
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-    user_question = st.chat_input(
-    "Ask a question about the document"
-    )
+    user_question = st.chat_input("Ask a question about the document")
 
     if user_question:
         st.session_state.messages.append(
-            {
-                "role": "user",
-                "content": user_question
-            }
+            {"role": "user", "content": user_question}
         )
 
         with st.chat_message("user"):
             st.markdown(user_question)
 
-        relevant_chunks = (
-            retrieve_relevant_chunks(
-                user_question,
-                embedding_model,
-                faiss_index,
-                document_chunks,
-                top_k=3
-            )
+        relevant_chunks = retrieve_relevant_chunks(
+            user_question,
+            embedding_model,
+            faiss_index,
+            document_chunks,
+            top_k=3
         )
+
         try:
-          with st.chat_message("assistant"):
-            with st.spinner(
-                "Searching the document..."
-            ):
-                answer = generate_answer(
-                    user_question,
-                    relevant_chunks,
-                    groq_client,
-                    GROQ_MODEL
-                )
+            with st.chat_message("assistant"):
+                with st.spinner("Searching the document..."):
+                    answer = generate_answer(
+                        user_question,
+                        relevant_chunks,
+                        groq_client,
+                        GROQ_MODEL
+                    )
 
-            if not answer or not answer.strip():
-                st.error(
-                    "The model returned an empty response."
-                )
-                st.stop()
+                if not answer or not answer.strip():
+                    st.error("The model returned an empty response.")
+                    st.stop()
 
-            st.markdown(answer)
+                st.markdown(answer)
+
+                best_pages = relevant_chunks[0]["pages"]
+                other_pages = sorted(
+                    {p for chunk in relevant_chunks[1:] for p in chunk["pages"]}
+                    - set(best_pages)
+                )
+                caption = "Best match: page(s) " + ", ".join(map(str, best_pages))
+                if other_pages:
+                    caption += " | Also searched: " + ", ".join(map(str, other_pages))
+                st.caption(caption)
 
         except Exception as error:
             st.error(
@@ -317,56 +280,9 @@ if uploaded_file is not None:
                 "Please check your API key, model "
                 "configuration, and internet connection."
             )
-
             st.caption(str(error))
             st.stop()
 
         st.session_state.messages.append(
-        {
-            "role": "assistant",
-            "content": answer
-        }
+            {"role": "assistant", "content": answer}
         )
-
-        #st.subheader("Answer")
-
-        #st.write(answer)
-
-    # Display document statistics in three columns.
-    #info_col1, info_col2, info_col3 = st.columns(3)
-
-    #with info_col1:
-        #st.metric("Pages", page_count)
-
-    #with info_col2:
-        #st.metric("Words", word_count)
-
-    #with info_col3:
-        #st.metric("Chunks", chunk_count)
-
-    # Show the full extracted text in a collapsible expander.
-    #with st.expander("Preview extracted text"):
-        #st.text_area(
-            #"Document text",
-            #document_text,
-            #height=300,
-            #disabled=True
-        #)
-
-    # Show a preview of the first few document chunks.
-    #with st.expander("Preview document chunks"):
-        #preview_count = min(
-            #3,
-            #len(document_chunks)
-        #)
-
-        #for index in range(preview_count):
-            #st.markdown(
-                #f"**Chunk {index + 1}**"
-            #)
-
-            #st.write(
-                #document_chunks[index]
-            #)
-
-            #st.divider()
