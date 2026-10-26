@@ -1,0 +1,388 @@
+[
+ {
+  "id": "L01",
+  "type": "lookup",
+  "question": "In which year was NorthStar Logistics founded?",
+  "expected_answer": "2011.",
+  "evidence": [
+   "founded in 2011"
+  ],
+  "answer_keywords": [
+   [
+    "2011"
+   ]
+  ],
+  "pdf_pages": [
+   2
+  ]
+ },
+ {
+  "id": "L02",
+  "type": "lookup",
+  "question": "Where is the company headquartered?",
+  "expected_answer": "Pune.",
+  "evidence": [
+   "headquarters in pune"
+  ],
+  "answer_keywords": [
+   [
+    "pune"
+   ]
+  ],
+  "pdf_pages": [
+   2
+  ]
+ },
+ {
+  "id": "H01",
+  "type": "hub",
+  "question": "How many dock doors does the Kochi hub have?",
+  "expected_answer": "20.",
+  "evidence": [
+   "the kochi hub operates 20 dock doors"
+  ],
+  "answer_keywords": [
+   [
+    "20",
+    "twenty"
+   ]
+  ],
+  "pdf_pages": [
+   16
+  ]
+ },
+ {
+  "id": "H02",
+  "type": "hub",
+  "question": "In which year did the Bhopal hub open?",
+  "expected_answer": "2020.",
+  "evidence": [
+   "the bhopal hub opened in 2020"
+  ],
+  "answer_keywords": [
+   [
+    "2020"
+   ]
+  ],
+  "pdf_pages": [
+   17
+  ]
+ },
+ {
+  "id": "H03",
+  "type": "hub",
+  "question": "How many pallet positions does the Guwahati hub have?",
+  "expected_answer": "19,900.",
+  "evidence": [
+   "the guwahati hub has 19,900 pallet positions"
+  ],
+  "answer_keywords": [
+   [
+    "19,900",
+    "19900"
+   ]
+  ],
+  "pdf_pages": [
+   19
+  ]
+ },
+ {
+  "id": "H04",
+  "type": "hub",
+  "question": "How many people work at the Surat hub?",
+  "expected_answer": "505.",
+  "evidence": [
+   "the surat hub employs 505 people"
+  ],
+  "answer_keywords": [
+   [
+    "505"
+   ]
+  ],
+  "pdf_pages": [
+   19
+  ]
+ },
+ {
+  "id": "P01",
+  "type": "table",
+  "question": "How many days of annual leave do employees in Germany get?",
+  "expected_answer": "30 days.",
+  "evidence": [
+   "germany 30 12"
+  ],
+  "answer_keywords": [
+   [
+    "30"
+   ]
+  ],
+  "pdf_pages": [
+   21
+  ]
+ },
+ {
+  "id": "P02",
+  "type": "table",
+  "question": "How many days of sick leave do employees in Singapore get?",
+  "expected_answer": "14 days.",
+  "evidence": [
+   "singapore 18 14"
+  ],
+  "answer_keywords": [
+   [
+    "14"
+   ]
+  ],
+  "pdf_pages": [
+   21
+  ]
+ },
+ {
+  "id": "P03",
+  "type": "lookup",
+  "question": "How long is the probation period for operations staff?",
+  "expected_answer": "6 months.",
+  "evidence": [
+   "probation lasts 6 months for operations staff"
+  ],
+  "answer_keywords": [
+   [
+    "6 months",
+    "six months"
+   ]
+  ],
+  "pdf_pages": [
+   22
+  ]
+ },
+ {
+  "id": "S01",
+  "type": "distractor",
+  "question": "Within how many hours must a warehouse injury be reported?",
+  "expected_answer": "Within 4 hours, to the site safety officer.",
+  "evidence": [
+   "warehouse injury must be reported to the site safety officer within 4 hours"
+  ],
+  "answer_keywords": [
+   [
+    "4 hours",
+    "four hours"
+   ]
+  ],
+  "pdf_pages": [
+   24
+  ]
+ },
+ {
+  "id": "S02",
+  "type": "distractor",
+  "question": "Within how many hours must a vehicle accident be reported?",
+  "expected_answer": "Within 2 hours, to the fleet control room.",
+  "evidence": [
+   "vehicle accident must be reported to the fleet control room within 2 hours"
+  ],
+  "answer_keywords": [
+   [
+    "2 hours",
+    "two hours"
+   ]
+  ],
+  "pdf_pages": [
+   25
+  ]
+ },
+ {
+  "id": "S03",
+  "type": "distractor",
+  "question": "Within how many hours must a data security incident be reported?",
+  "expected_answer": "Within 24 hours.",
+  "evidence": [
+   "data security incident must be reported to the information security team within 24 hours"
+  ],
+  "answer_keywords": [
+   [
+    "24 hours",
+    "24-hour"
+   ]
+  ],
+  "pdf_pages": [
+   25
+  ]
+ },
+ {
+  "id": "S04",
+  "type": "lookup",
+  "question": "How often must forklift operators renew their licence?",
+  "expected_answer": "Every 18 months.",
+  "evidence": [
+   "renew their licence every 18 months"
+  ],
+  "answer_keywords": [
+   [
+    "18 months",
+    "eighteen months"
+   ]
+  ],
+  "pdf_pages": [
+   26
+  ]
+ },
+ {
+  "id": "S05",
+  "type": "distractor",
+  "question": "What is the maximum stacking height in the cold chain zone?",
+  "expected_answer": "3 levels.",
+  "evidence": [
+   "up to 3 levels in the cold chain zone"
+  ],
+  "answer_keywords": [
+   [
+    "3 levels",
+    "three levels"
+   ]
+  ],
+  "pdf_pages": [
+   27
+  ]
+ },
+ {
+  "id": "F01",
+  "type": "distractor",
+  "question": "How often are light vans serviced?",
+  "expected_answer": "Every 10,000 km.",
+  "evidence": [
+   "light vans are serviced every 10,000 km"
+  ],
+  "answer_keywords": [
+   [
+    "10,000"
+   ]
+  ],
+  "pdf_pages": [
+   29
+  ]
+ },
+ {
+  "id": "F02",
+  "type": "lookup",
+  "question": "How quickly are express deliveries completed?",
+  "expected_answer": "Within 24 hours.",
+  "evidence": [
+   "express deliveries within 24 hours"
+  ],
+  "answer_keywords": [
+   [
+    "24 hours",
+    "24-hour"
+   ]
+  ],
+  "pdf_pages": [
+   30
+  ]
+ },
+ {
+  "id": "F03",
+  "type": "lookup",
+  "question": "How long must drivers break, and after how many hours of driving?",
+  "expected_answer": "30 minutes after 4.5 hours of continuous driving.",
+  "evidence": [
+   "break of 30 minutes after 4.5 hours of continuous driving"
+  ],
+  "answer_keywords": [["30 minutes", "30-minute", "30 minute"], ["4.5"]],
+  "pdf_pages": [
+   30
+  ]
+ },
+ {
+  "id": "R01",
+  "type": "reasoning",
+  "question": "Who must approve a purchase of INR 3,000,000?",
+  "expected_answer": "The Chief Financial Officer (above INR 2,500,000).",
+  "evidence": [
+   "above inr 2,500,000"
+  ],
+  "answer_keywords": [
+   [
+    "chief financial officer",
+    "cfo"
+   ]
+  ],
+  "pdf_pages": [
+   32
+  ]
+ },
+ {
+  "id": "R02",
+  "type": "lookup",
+  "question": "How many written quotations are needed for purchases above INR 100,000?",
+  "expected_answer": "At least 3.",
+  "evidence": [
+   "at least 3 written quotations"
+  ],
+  "answer_keywords": [
+   [
+    "3",
+    "three"
+   ]
+  ],
+  "pdf_pages": [
+   33
+  ]
+ },
+ {
+  "id": "M01",
+  "type": "multi_part",
+  "question": "What is the combined pallet capacity of the Pune and Nagpur hubs?",
+  "expected_answer": "42,000 + 31,500 = 73,500.",
+  "evidence": [
+   "the pune hub has 42,000 pallet positions",
+   "the nagpur hub has 31,500 pallet positions"
+  ],
+  "answer_keywords": [
+   [
+    "73,500",
+    "73500"
+   ]
+  ],
+  "pdf_pages": [
+   12,
+   12
+  ]
+ },
+ {
+  "id": "U01",
+  "type": "unanswerable",
+  "question": "How many dock doors does the Kolkata hub have?",
+  "expected_answer": "Refuse: there is no Kolkata hub."
+ },
+ {
+  "id": "U02",
+  "type": "unanswerable",
+  "question": "How many days of annual leave do employees in Brazil get?",
+  "expected_answer": "Refuse: Brazil is not in the leave table."
+ },
+ {
+  "id": "U03",
+  "type": "unanswerable",
+  "question": "Who is the CEO of NorthStar Logistics?",
+  "expected_answer": "Refuse: no CEO is named."
+ },
+ {
+  "id": "U04",
+  "type": "unanswerable",
+  "question": "What is the company's policy on paying suppliers in cryptocurrency?",
+  "expected_answer": "Refuse: not covered."
+ },
+ {
+  "id": "U05",
+  "type": "unanswerable",
+  "question": "How many days of sick leave do employees in Canada get?",
+  "expected_answer": "Refuse: Canada is not in the leave table."
+ },
+ {
+  "id": "U06",
+  "type": "unanswerable",
+  "question": "What is the fuel price per litre used for budgeting?",
+  "expected_answer": "Refuse: not covered."
+ }
+]
