@@ -2,7 +2,7 @@
 
 Upload a PDF and ask questions about it. Answers are generated only from the document, come with the page numbers they were retrieved from, and the bot says so when the document does not contain the answer. The project includes an evaluation harness, and the retrieval settings were chosen by measuring them instead of guessing.
 
-**Live demo:** https://your-app-name.streamlit.app *(replace with your real link)*
+**Live demo:** https://pdf-ragchat-bot.streamlit.app/
 
 ## Features
 
